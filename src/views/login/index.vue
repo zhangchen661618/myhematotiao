@@ -73,6 +73,16 @@ export default {
         if (isOk) {
           // 通过了校验
           console.log('前端校验成功')
+          this.$axios({
+            method: 'post',
+            url: '/authorizations',
+            data: this.formData // post 参数是在data 中写入的
+          }).then(result => {
+            console.log(result.data.data)
+            // 把接收到的信息转为字符串放入本地存储中
+            window.localStorage.setItem('user-info', JSON.stringify(result.data.data))
+            this.$router.push('/home')
+          })
         }
       })
     }
