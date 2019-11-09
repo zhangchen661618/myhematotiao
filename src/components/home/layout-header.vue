@@ -51,6 +51,7 @@ export default {
     commandAction (command) {
       if (command === 'acount') {
         // 账户信息
+        this.$router.push('/home/account')
       } else if (command === 'git') {
         // git
         window.location.href = 'https://github.com/zhangchen661618/myhematotiao'

@@ -3,6 +3,7 @@
   <el-container>
     <!-- 侧边栏容器 -->
     <el-aside class="rq-aside">
+      <!-- 左侧菜单 -->
       <layout-aside></layout-aside>
     </el-aside>
     <!-- 嵌套大容器 -->
@@ -12,7 +13,10 @@
         <layout-header></layout-header>
       </el-header>
       <!-- 中间内容 -->
-      <el-main>中间区域</el-main>
+      <el-main>
+        <!-- 二级路由的容器 -->
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
