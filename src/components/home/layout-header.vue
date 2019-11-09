@@ -7,17 +7,18 @@
         </el-col>
         <el-col :span="3" class="box-row-col2" >
             <img  :src="user.photo ? user.photo : defaultImg" alt="">
-            <el-dropdown trigger="click">
+            <el-dropdown trigger="click"  @command="commandAction">
                 <!-- 匿名插槽 -->
                 <span class="el-dropdown-link">
                     {{user.name}}
                     <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <!-- 具名插槽 -->
+                <!-- @command 绑定菜单项点击事件 -->
                 <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item >个人信息</el-dropdown-item>
-                    <el-dropdown-item >git地址</el-dropdown-item>
-                    <el-dropdown-item >退出</el-dropdown-item>
+                    <el-dropdown-item command="account">个人信息</el-dropdown-item>
+                    <el-dropdown-item command="git">git地址</el-dropdown-item>
+                    <el-dropdown-item command="out">退出</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
         </el-col>
@@ -45,6 +46,19 @@ export default {
         // console.log(result.data.data)
         this.user = result.data.data // 获取到用户的最新资料，赋值给data中的数据
       })
+    },
+    // 点击菜单项，会触发的事件 command 是点击的菜单项中的command属性值
+    commandAction (command) {
+      if (command === 'acount') {
+        // 账户信息
+      } else if (command === 'git') {
+        // git
+        window.location.href = 'https://github.com/zhangchen661618/myhematotiao'
+      } else if (command === 'out') {
+        // 退出
+        window.localStorage.clear() // 擦除本项目在浏览器上的所有前端缓存
+        this.$router.push('/login')
+      }
     }
   },
   created () {
