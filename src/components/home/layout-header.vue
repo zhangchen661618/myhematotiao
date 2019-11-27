@@ -41,7 +41,7 @@ export default {
         url: '/user/profile'
       }).then((result) => {
         // console.log(result.data.data)
-        this.user = result.data.data // 获取到用户的最新资料，赋值给data中的数据
+        this.user = result.data // 获取到用户的最新资料，赋值给data中的数据
       })
     },
     // 点击菜单项，会触发的事件 command 是点击的菜单项中的command属性值

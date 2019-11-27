@@ -80,7 +80,7 @@ export default {
           }).then(result => {
             console.log(result.data.data)
             // 把接收到的信息转为字符串放入本地存储中
-            window.localStorage.setItem('user-info', JSON.stringify(result.data.data))
+            window.localStorage.setItem('user-info', JSON.stringify(result.data))
             this.$router.push('/home')
           }).catch(() => {
             // $message 是elementUI注入到vue实例的方法
