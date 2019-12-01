@@ -23,9 +23,20 @@
           <el-button type="text">修改</el-button>
           <el-button @click="closeOrOpen(obj.row)" :style="{color:obj.row.comment_status ? '#E6A23C' :'#409EFF'}" type="text" >{{obj.row.comment_status ? "关闭评论":'打开评论'}}</el-button>
         </template>
-
       </el-table-column>
     </el-table>
+    <el-row class="pagination">
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :page-size="page.pageSize"
+        :total="page.total"
+        :current-page="page.currentPage"
+        @current-change="changePage"
+        >
+      </el-pagination>
+    </el-row>
+
   </el-card>
 </template>
 
@@ -34,10 +45,22 @@ export default {
   data () {
     return {
       // list: [{ id: 1, name: '张三' }, { id: 2, name: '李四' }]
-      list: []
+      list: [],
+      // 分页信息 当前页码 每页多少条
+      page: {
+        pageSize: 10,
+        total: 0,
+        currentPage: 1
+      }
     }
   },
   methods: {
+    // 页码改变时触发
+    changePage (newPage) {
+      // 用最新页码去查询
+      this.page.currentPage = newPage // 将当前页码赋值给data中的变量
+      this.getComments() // 获取当前newPage的数据
+    },
     // 点击打开或者关闭
     closeOrOpen (row) {
       let mess = row.comment_status ? '关闭' : '打开'
@@ -58,14 +81,17 @@ export default {
     // axios中有一个对象存储的就是query参数  params
     // axios中有一个对象存储的就是body参数  data
     getComments () {
+      let pageParams = { page: this.page.currentPage, per_page: this.page.pageSize }
       this.$axios({
         method: 'get',
         url: '/articles',
         params: {
-          response_type: 'comment' // 查询评论相关的数据
+          response_type: 'comment', // 查询评论相关的数据
+          ...pageParams
         }
       }).then(result => {
         this.list = result.data.results // 获取列表数据给当前的数据对象
+        this.page.total = result.data.total_count // 文章评论列表总数，赋值给当前分页的总数
       })
     },
     // row当条数据对象  column当前列的属性  cellValue当前单元格属性值  index索引
@@ -80,11 +106,15 @@ export default {
   },
   // 创建实例之后执行
   created () {
-    this.getComments()
+    this.getComments() // 页面刚进去后查询 应该查第一页数据
   }
 }
 </script>
 
-<style>
-
+<style lang='less' scoped>
+  .pagination{
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
 </style>
