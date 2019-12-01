@@ -5,7 +5,6 @@
          <!-- 定义具名插槽 -->
          <slot name="title"></slot>
      </el-breadcrumb-item>
-
  </el-breadcrumb>
 </template>
 
