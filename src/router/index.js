@@ -23,6 +23,10 @@ const routes = [
       {
         path: '',
         component: Main // 默认的二级路由
+      },
+      {
+        path: '/home/comment', // 评论列表
+        component: () => import('../views/comment/index.vue') // 按需加载的写法
       }
     ]
   }
