@@ -10,7 +10,7 @@
       <el-table-column label="标识" prop="id"></el-table-column>
       <el-table-column label="姓名" prop="name"></el-table-column>
     </el-table> -->
-    <el-table :data="list" :stripe="true" border>
+    <el-table :data="list" :stripe="true" border v-loading='loading'>
       <!-- prop 绑定的字段名称 -->
       <el-table-column prop="title" width="500" label="标题"></el-table-column>
       <el-table-column :formatter="formatter" prop="comment_status" label="评论状态"></el-table-column>
@@ -51,7 +51,8 @@ export default {
         pageSize: 10,
         total: 0,
         currentPage: 1
-      }
+      },
+      loading: false
     }
   },
   methods: {
@@ -81,6 +82,7 @@ export default {
     // axios中有一个对象存储的就是query参数  params
     // axios中有一个对象存储的就是body参数  data
     getComments () {
+      this.loading = true // 将加载进度设置为加载状态
       let pageParams = { page: this.page.currentPage, per_page: this.page.pageSize }
       this.$axios({
         method: 'get',
@@ -92,6 +94,7 @@ export default {
       }).then(result => {
         this.list = result.data.results // 获取列表数据给当前的数据对象
         this.page.total = result.data.total_count // 文章评论列表总数，赋值给当前分页的总数
+        this.loading = false // 关闭加载进度状态
       })
     },
     // row当条数据对象  column当前列的属性  cellValue当前单元格属性值  index索引
