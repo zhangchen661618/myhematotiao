@@ -50,6 +50,7 @@ axios.interceptors.response.use(function (response) {
       break
   }
   Message({ message: message, type: 'warning' })
-  return new Promise()
+  return new Promise(function () {}) // 如果不return 就会抛出异常控制台会看到错误
+  // 返回一个新的promise对象 就意味着有一个新的没有错误的promise返回之前错误被终止了
 })
 export default axios
