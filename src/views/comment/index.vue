@@ -10,13 +10,16 @@
       <el-table-column label="标识" prop="id"></el-table-column>
       <el-table-column label="姓名" prop="name"></el-table-column>
     </el-table> -->
-    <el-table :data="list">
+    <el-table :data="list" :stripe="true" border>
       <!-- prop 绑定的字段名称 -->
       <el-table-column prop="title" width="500" label="标题"></el-table-column>
-      <el-table-column prop="comment_status" label="评论状态"></el-table-column>
+      <el-table-column :formatter="formatter" prop="comment_status" label="评论状态"></el-table-column>
       <el-table-column prop="total_comment_count" label="总评论数"></el-table-column>
       <el-table-column prop="fans_comment_count" label="粉丝评论数"></el-table-column>
-      <el-table-column label="操作"></el-table-column>
+      <el-table-column label="操作">
+        <el-button type="text">修改</el-button>
+        <el-button type="text">关闭评论</el-button>
+      </el-table-column>
     </el-table>
   </el-card>
 </template>
@@ -44,6 +47,15 @@ export default {
       }).then(result => {
         this.list = result.data.results // 获取列表数据给当前的数据对象
       })
+    },
+    // row当条数据对象  column当前列的属性  cellValue当前单元格属性值  index索引
+    // formatter 需要返回结果 需要根据当前值进行返回
+    formatter (row, column, cellValue, index) {
+      // if (cellValue) {
+      //   return '正常'
+      // }
+      // return '关闭'
+      return cellValue ? '正常' : '关闭'
     }
   },
   // 创建实例之后执行
