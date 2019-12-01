@@ -17,8 +17,13 @@
       <el-table-column prop="total_comment_count" label="总评论数"></el-table-column>
       <el-table-column prop="fans_comment_count" label="粉丝评论数"></el-table-column>
       <el-table-column label="操作">
-        <el-button type="text">修改</el-button>
-        <el-button type="text">关闭评论</el-button>
+        <!-- 作用域插槽 父组件写组件内容的时候 调用子组件的数据-->
+        <!-- obj相当于 el-table-column下子组件给slot的属性集合 -->
+        <template slot-scope="obj">
+          <el-button type="text">修改</el-button>
+          <el-button @click="closeOrOpen(obj.row)" :style="{color:obj.row.comment_status ? '#E6A23C' :'#409EFF'}" type="text" >{{obj.row.comment_status ? "关闭评论":'打开评论'}}</el-button>
+        </template>
+
       </el-table-column>
     </el-table>
   </el-card>
@@ -33,6 +38,21 @@ export default {
     }
   },
   methods: {
+    // 点击打开或者关闭
+    closeOrOpen (row) {
+      let mess = row.comment_status ? '关闭' : '打开'
+      this.$confirm(`您确定要${mess}评论吗`, '提示').then(() => {
+        this.$axios({
+          method: 'put',
+          url: '/comments/status',
+          params: { article_id: row.id },
+          data: { allow_comment: !row.comment_status }// 状态是反着的
+        }).then(() => {
+          // 如果进去到then函数中一定是成功
+          this.getComments()
+        })
+      })
+    },
     // 查询评论列表数据
     // query参数是get参数 在url链接上  post参数是body参数
     // axios中有一个对象存储的就是query参数  params
