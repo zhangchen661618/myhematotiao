@@ -11,8 +11,10 @@
                     <el-card class="img-card" v-for="item in list" :key="item.id">
                         <img :src="item.url" alt=""/>
                         <el-row align="middle" class="operate" type="flex" justify="space-around">
-                            <i class="el-icon-delete"></i>
-                            <i class="el-icon-star-on"></i>
+                            <!-- 收藏图标 注册取消收藏和收藏事件 -->
+                            <i :style="{color:item.is_collected?'red':''}" @click="collectOrCancel(item)" class="el-icon-star-on"></i>
+                            <!-- 删除图标 注册删除事件 -->
+                            <i @click="delMaterial(item)" class="el-icon-delete"></i>
                         </el-row>
                     </el-card>
                 </div>
@@ -63,6 +65,32 @@ export default {
     }
   },
   methods: {
+    // 收藏或者取消素材方法
+    collectOrCancel (item) {
+      //  is_collected 是否是收藏 如果为true则表示收藏 这时点击应该取消  如果为false 则表示没有收藏 应该取消
+      let mess = item.is_collected ? '取消收藏' : '收藏'
+      this.$confirm(`你是否要${mess}此图片?`, '提示').then(() => {
+        this.$axios({
+          method: 'put',
+          url: `/user/images/${item.id}`,
+          data: { collect: !item.is_collected } // 取相反状态
+        }).then(result => {
+          this.getMaterial() // 重新获取数据
+        })
+      })
+    },
+    // 删除素材方法
+    delMaterial (item) {
+      this.$confirm('您确定要删除此图片吗', '提示').then(() => {
+        this.$axios({
+          method: 'delete',
+          url: `/user/images/${item.id}`
+        }).then(result => {
+          // this.page.currentPage = 1 可以回到第一页
+          this.getMaterial() // 重新获取数据
+        })
+      })
+    },
     // 切换页码
     changePage (newPage) {
       this.page.currentPage = newPage
