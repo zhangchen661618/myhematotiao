@@ -31,6 +31,10 @@ const routes = [
       {
         path: '/home/material', // 素材列表
         component: () => import('../views/material/index.vue') // 按需加载的写法
+      },
+      {
+        path: '/home/articles', // 内容列表
+        component: () => import('../views/articles/index.vue') // 按需加载的写法
       }
     ]
   }
