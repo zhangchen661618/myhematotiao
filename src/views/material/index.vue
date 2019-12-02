@@ -4,6 +4,10 @@
             <!-- 具名插槽 -->
             <template slot="title">素材管理</template>
         </bread-crumb>
+        <!-- 上传素材图片 -->
+        <el-upload :show-file-list="false" :http-request="UploadImg" action="" class="upload-material">
+          <el-button type="primary">上传图片</el-button>
+        </el-upload>
         <!-- el-tabs 中 v-model属性绑定的是当前子标签页的name -->
         <el-tabs v-model="activeName" @tab-click="changeTab">
             <el-tab-pane label="全部图片" name="all">
@@ -65,6 +69,20 @@ export default {
     }
   },
   methods: {
+    // 自定义上传图片素材
+    UploadImg (params) {
+      // console.log(params.file)
+      let formData = new FormData()
+      // formData 添加参数 用 append 方法
+      formData.append('image', params.file)
+      this.$axios({
+        method: 'post',
+        url: '/user/images',
+        data: formData
+      }).then(result => {
+        this.getMaterial() // 重新加载数据
+      })
+    },
     // 收藏或者取消素材方法
     collectOrCancel (item) {
       //  is_collected 是否是收藏 如果为true则表示收藏 这时点击应该取消  如果为false 则表示没有收藏 应该取消
@@ -123,30 +141,35 @@ export default {
 </script>
 
 <style lang="less" scoped>
-    .img-list{
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        .img-card{
-            width: 200px;
-            height: 200px;
-            margin: 20px 10px;
-            position: relative;
-            img{
-                width: 100%;
-                height: 100%;
-            }
-            .operate{
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                height: 30px;
-                background-color: #f4f5f6;
-                i{
-                    font-size: 22px;
-                }
-            }
-        }
-    }
+  .upload-material{
+    position: absolute;
+    right: 20px;
+    margin-top: -10px;
+  }
+  .img-list{
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      .img-card{
+          width: 200px;
+          height: 200px;
+          margin: 20px 10px;
+          position: relative;
+          img{
+              width: 100%;
+              height: 100%;
+          }
+          .operate{
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 30px;
+              background-color: #f4f5f6;
+              i{
+                  font-size: 22px;
+              }
+          }
+      }
+  }
 </style>
