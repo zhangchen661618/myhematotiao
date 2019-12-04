@@ -63,6 +63,17 @@
                     </span>
                 </div>
             </div>
+            <!-- 分页组件 -->
+            <el-row type="flex" justify="center" style="margin:20px 0;">
+                <el-pagination
+                background
+                layout="prev, pager, next"
+                :total="page.total"
+                :current-page="page.currentPage"
+                :page-size="page.pageSize"
+                @current-change="changePage">
+                </el-pagination>
+            </el-row>
         </div>
     </el-card>
 </template>
@@ -80,14 +91,15 @@ export default {
       channels: [], // 频道列表数据
       list: [], // 内容列表
       page: {
-        total: 0
+        total: 0,
+        pageSize: 10,
+        currentPage: 1
       }
     }
   },
   methods: {
-    // 刷新列表数据 状态改变/频道切换/日期改变 都会触发
-    refreshList () {
-    //   console.log(this.formData.status)
+    // 获取所有条件 状态改变+频道切换+日期改变
+    getConditions () {
       let { status, channel_id: cid, dataRange } = this.formData
       let params = {
         status: status === 5 ? null : status, // 由于默认给了5 如果是5不能传 所有特殊处理下
@@ -95,7 +107,21 @@ export default {
         begin_pubdate: dataRange && dataRange.length ? dataRange[0] : null,
         end_pubdate: dataRange && dataRange.length > 1 ? dataRange[1] : null
       }
-      this.getArticles(params) // 调用查询接口 传入参数
+      params.page = this.page.currentPage
+      params.per_page = this.page.pageSize
+      return params
+    },
+    //   页码改变事件
+    changePage (newPage) {
+      this.page.currentPage = newPage // 获取当前的最新页码
+      // 如果点击了第二页，但是有条件 所以需要把所以条件都加到一起 发送给方法
+      this.getArticles(this.getConditions()) // 查询数据
+    },
+    // 刷新列表数据 状态改变/频道切换/日期改变 都会触发
+    refreshList () {
+      // 当筛选条件改变时，应该将页码回归道第一页
+      this.page.currentPage = 1
+      this.getArticles(this.getConditions()) // 调用查询接口 传入参数
     },
     // 获取文章方法
     getArticles (params) {
@@ -148,7 +174,9 @@ export default {
     }
   },
   created () {
-    this.getArticles() // 获取文章列表
+    // 查询第一页参数
+    let pageParams = { page: 1, per_page: 10 }
+    this.getArticles(pageParams) // 获取文章列表
     this.getChannels()// 获取频道分类
   }
 }
