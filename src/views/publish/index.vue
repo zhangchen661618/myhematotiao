@@ -89,9 +89,24 @@ export default {
       }).then(result => {
         this.channels = result.data.channels
       })
+    },
+    // 通过文章id获取文章信息
+    getArticleById () {
+      let { articleId } = this.$route.params
+      this.$axios({
+        method: 'get',
+        url: `/articles/${articleId}`
+      }).then(result => {
+        this.formData = result.data
+      })
     }
   },
   created () {
+    let { articleId } = this.$route.params
+    // 加载数据 如果id 存在 就认为是编辑 如果不存在认为是新增
+    articleId && this.getArticleById()
+    // if (articleId) { this.getArticleById() }
+
     this.getChannels() // 获取频道列表
   }
 }
