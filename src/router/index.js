@@ -39,6 +39,10 @@ const routes = [
       {
         path: '/home/publish', // 发布文章
         component: () => import('../views/publish/index.vue') // 按需加载的写法
+      },
+      {
+        path: '/home/publish/:articleId', // 编辑文章 动态路由 定义了一个参数 articleId
+        component: () => import('../views/publish/index.vue') // 按需加载的写法
       }
     ]
   }
