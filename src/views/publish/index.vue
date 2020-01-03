@@ -68,10 +68,35 @@ export default {
     publish (draft) {
       this.$refs.myForm.validate((isOk) => {
         if (isOk) {
-          // 发布文章
+          let{ articleId } = this.$route.params
+          let method = articleId ? 'put' : 'post' // 根据文章id 确定是编辑还是新增
+          let url = articleId ? `/articles/${articleId}` : '/articles' // 根据id确定当前的请求地址
+          // if (articleId) {
+          //   // 发布文章
+          //   this.$axios({
+          //     method: 'put',
+          //     url: `/articles/${articleId}`,
+          //     params: { draft: draft }, // 是否为草稿
+          //     data: { ...this.formData }
+          //   }).then(() => {
+          //   // 如果发送成功 就会跳转到内容列表
+          //     this.$router.push('/home/articles')
+          //   })
+          // } else {
+          //   // 发布文章
+          //   this.$axios({
+          //     method: 'post',
+          //     url: '/articles',
+          //     params: { draft: draft }, // 是否为草稿
+          //     data: { ...this.formData }
+          //   }).then(() => {
+          //   // 如果发送成功 就会跳转到内容列表
+          //     this.$router.push('/home/articles')
+          //   })
+          // }
           this.$axios({
-            method: 'post',
-            url: '/articles',
+            method: method,
+            url: url,
             params: { draft: draft }, // 是否为草稿
             data: { ...this.formData }
           }).then(() => {
