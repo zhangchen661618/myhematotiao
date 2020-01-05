@@ -17,7 +17,7 @@
               </quill-editor>
           </el-form-item>
           <el-form-item label="封面">
-              <el-radio-group v-model="formData.cover.type">
+              <el-radio-group @change="changeType" v-model="formData.cover.type">
                   <el-radio :label="1">单图</el-radio>
                   <el-radio :label="3">三图</el-radio>
                   <el-radio :label="0">无图</el-radio>
@@ -65,6 +65,18 @@ export default {
     }
   },
   methods: {
+    // 点击图片类型
+    changeType () {
+      // 可以获取到最新的封面类型 去改变当前的images 类型
+      console.log(this.formData.cover.type)
+      if (this.formData.cover.type === 1) {
+        this.formData.cover.images = [''] // 当类型为单图时，要为数组生成一个地址
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', ''] // 当类型为单图时，要为数组生成一个地址
+      } else {
+        this.formData.cover.images = []
+      }
+    },
     // 发布内容
     publish (draft) {
       this.$refs.myForm.validate((isOk) => {
@@ -72,29 +84,6 @@ export default {
           let{ articleId } = this.$route.params
           let method = articleId ? 'put' : 'post' // 根据文章id 确定是编辑还是新增
           let url = articleId ? `/articles/${articleId}` : '/articles' // 根据id确定当前的请求地址
-          // if (articleId) {
-          //   // 发布文章
-          //   this.$axios({
-          //     method: 'put',
-          //     url: `/articles/${articleId}`,
-          //     params: { draft: draft }, // 是否为草稿
-          //     data: { ...this.formData }
-          //   }).then(() => {
-          //   // 如果发送成功 就会跳转到内容列表
-          //     this.$router.push('/home/articles')
-          //   })
-          // } else {
-          //   // 发布文章
-          //   this.$axios({
-          //     method: 'post',
-          //     url: '/articles',
-          //     params: { draft: draft }, // 是否为草稿
-          //     data: { ...this.formData }
-          //   }).then(() => {
-          //   // 如果发送成功 就会跳转到内容列表
-          //     this.$router.push('/home/articles')
-          //   })
-          // }
           this.$axios({
             method: method,
             url: url,
